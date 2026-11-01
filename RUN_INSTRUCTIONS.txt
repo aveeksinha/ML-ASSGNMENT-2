@@ -1,0 +1,15 @@
+1. Install Python packages:
+   pip install -r requirements.txt
+
+2. Download dataset, train and save the five models:
+   python train_models.py
+
+3. Run the Streamlit app:
+   streamlit run app.py
+
+The training script creates test_data.csv, metrics.json, feature_columns.json
+and all five model files under model/.
+
+IMPORTANT:
+The actual metrics and model files are generated only after running the training
+script against the live UCI dataset. They are not fabricated.
