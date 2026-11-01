@@ -33,6 +33,14 @@ TEST_SIZE = 0.20
 RANDOM_STATE = 42
 TARGET_COLUMN = "y"
 
+MODEL_FILENAMES = {
+    "Logistic Regression": "logistic_regression.joblib",
+    "Decision Tree": "decision_tree.joblib",
+    "K-Nearest Neighbors": "k_nearest_neighbors.joblib",
+    "Gaussian Naive Bayes": "gaussian_naive_bayes.joblib",
+    "Support Vector Machine": "support_vector_machine.joblib"
+}
+
 
 def load_dataset():
     """Download the BEED dataset from the UCI repository."""
@@ -70,7 +78,7 @@ def load_dataset():
 
 
 def create_models():
-    """Create all five classifiers required for the assignment."""
+    """Create the five classifiers required for the assignment."""
     return {
         "Logistic Regression": Pipeline([
             ("scaler", StandardScaler()),
@@ -90,7 +98,7 @@ def create_models():
 
 
 def calculate_metrics(model, X_test, y_test):
-    """Calculate the six evaluation metrics for a fitted model."""
+    """Calculate all six evaluation metrics."""
     predictions = model.predict(X_test)
     probabilities = model.predict_proba(X_test)
     classes = model.classes_
@@ -126,7 +134,7 @@ def main():
         X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE, stratify=y
     )
 
-    # Save a labelled hold-out test set for the Streamlit application.
+    # Save a labelled hold-out set for testing in the Streamlit application.
     test_data = X_test.copy()
     test_data[TARGET_COLUMN] = y_test.values
     test_data.to_csv(ROOT / "test_data.csv", index=False)
@@ -136,12 +144,10 @@ def main():
         print("\nTraining:", model_name)
         model.fit(X_train, y_train)
 
-        model_filename = (
-            model_name.lower().replace(" ", "_").replace("-", "") + ".joblib"
-        )
+        model_filename = MODEL_FILENAMES[model_name]
         joblib.dump(model, MODEL_DIR / model_filename)
-
         results[model_name] = calculate_metrics(model, X_test, y_test)
+
         print("Saved:", model_filename)
         print("Metrics:", results[model_name])
 
